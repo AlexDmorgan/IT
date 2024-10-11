@@ -1,0 +1,170 @@
+let selectedRoom = null;
+let selectedDate = new Date().toISOString().split('T')[0]; // Set tanggal saat ini (format YYYY-MM-DD)
+// Daftar jadwal peminjaman yang sudah ada
+let bookings = [
+    { startTime: '06:30', endTime: '08:30' },
+    { startTime: '09:00', endTime: '10:00' }
+];
+
+// Fungsi untuk menambahkan jadwal baru
+function addBooking(startTime, endTime) {
+    bookings.push({ startTime, endTime });
+    updateScheduleList();
+}
+
+// Fungsi untuk mengecek apakah ada konflik waktu
+function checkConflict(startTime, endTime) {
+    for (let booking of bookings) {
+        if (!(endTime <= booking.startTime || startTime >= booking.endTime)) {
+            return true; // Ada konflik
+        }
+    }
+    return false;
+}
+
+// Update jadwal yang ada di halaman
+function updateScheduleList() {
+    const scheduleList = document.getElementById('scheduleList');
+    scheduleList.innerHTML = ''; // Kosongkan daftar
+    bookings.forEach(booking => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Dari ${booking.startTime} sampai ${booking.endTime}`;
+        scheduleList.appendChild(listItem);
+    });
+}
+
+// Menangani form submission
+document.getElementById('bookingForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Mencegah reload halaman
+
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+
+    // Validasi apakah waktu yang dipilih sah
+    if (startTime >= endTime) {
+        alert('Waktu mulai harus lebih awal daripada waktu selesai!');
+        return;
+    }
+
+    // Cek apakah ada konflik dengan jadwal yang sudah ada
+    if (checkConflict(startTime, endTime)) {
+        alert('Waktu ini sudah terpakai, silakan pilih waktu lain.');
+    } else {
+        addBooking(startTime, endTime);
+        alert('Peminjaman berhasil diajukan!');
+    }
+});
+
+// Initial call to display current schedule
+updateScheduleList();
+// Fungsi untuk membuka form
+function openForm(roomName, element) {
+    if (element.style.backgroundColor !== "red") {
+        selectedRoom = element;
+        document.getElementById("formPopup").style.display = "block";
+    }
+}
+
+// Fungsi untuk menutup form
+function closeForm() {
+    document.getElementById("formPopup").style.display = "none";
+    clearForm();
+}
+
+// Fungsi untuk membersihkan form
+function clearForm() {
+    document.getElementById("nama").value = '';
+    document.getElementById("ekskul").value = 'Tomodachi';
+    document.getElementById("alasan").value = '';
+    document.getElementById("jamMulai").value = '';
+    document.getElementById("jamSelesai").value = '';
+}
+
+// Fungsi untuk menyimpan status ruangan ke localStorage berdasarkan tanggal
+function saveRoomStatus() {
+    const status = JSON.parse(localStorage.getItem(`status_${selectedDate}`)) || {};
+    const roomElements = document.querySelectorAll('.ruang, .ruangs');
+
+    roomElements.forEach((room, index) => {
+        if (room.style.backgroundColor === "red") {
+            status[`ruang_${index}`] = true;
+        }
+    });
+
+    localStorage.setItem(`status_${selectedDate}`, JSON.stringify(status));
+}
+
+// Fungsi untuk memperbarui tampilan ruangan berdasarkan status yang tersimpan di localStorage
+function updateRoomStatus() {
+    const status = JSON.parse(localStorage.getItem(`status_${selectedDate}`)) || {};
+    const roomElements = document.querySelectorAll('.ruang, .ruangs');
+
+    roomElements.forEach((room, index) => {
+        if (status[`ruang_${index}`]) {
+            room.style.backgroundColor = "red";
+            room.onclick = null; // Nonaktifkan klik untuk ruangan yang tidak tersedia
+        } else {
+            room.style.backgroundColor = "";
+            room.onclick = () => openForm(`Ruang ${index + 1}`, room); // Aktifkan klik untuk ruangan yang tersedia
+        }
+    });
+}
+
+// Fungsi untuk mengubah tanggal
+function changeDate() {
+    selectedDate = document.getElementById("tanggal").value;
+    updateRoomStatus(); // Update tampilan ruangan sesuai status pada tanggal yang baru
+}
+
+// Fungsi untuk mengirim form
+function submitForm() {
+    const nama = document.getElementById("nama").value;
+    const ekskul = document.getElementById("ekskul").value;
+    const alasan = document.getElementById("alasan").value;
+    const jamMulai = document.getElementById("jamMulai").value;
+    const jamSelesai = document.getElementById("jamSelesai").value;
+
+    // Cek jika semua data telah diisi
+    if (nama && ekskul && alasan && jamMulai && jamSelesai) {
+        // Kirim data ke Google Apps Script
+        fetch('https://script.google.com/macros/s/AKfycbyumNPqEtHa9dRJpgSEOCq515vo9GcUOaZ4rs7uKTfOtV-8tNmbxp0EH6PxGQ0ploQ77Q/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                nama,
+                ekskul,
+                alasan,
+                jamMulai,
+                jamSelesai
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Untuk debugging
+            
+            // Tampilkan daftar peminjaman
+            const daftarPinjaman = document.getElementById("daftarPinjaman");
+            daftarPinjaman.innerHTML += `<p>${nama} meminjam ${selectedRoom.innerText} untuk ${ekskul} pada ${jamMulai} hingga ${jamSelesai}.</p>`;
+            
+            // Ubah warna ruangan menjadi merah (tidak tersedia)
+            selectedRoom.style.backgroundColor = "red";
+            selectedRoom.onclick = null; // Nonaktifkan klik untuk ruangan yang dipinjam
+
+            saveRoomStatus(); // Simpan status setelah form dikirim
+            closeForm(); // Tutup form setelah peminjaman
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        alert("Mohon lengkapi semua data peminjaman.");
+    }
+}
+
+
+// Load status ruangan saat halaman dimuat
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("tanggal").value = selectedDate;
+    updateRoomStatus();
+});
+
