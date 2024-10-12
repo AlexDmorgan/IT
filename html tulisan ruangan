@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denah Ruangan SMA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <label for="tanggal">Pilih Tanggal:</label>
+    <input type="date" id="tanggal" onchange="changeDate()">
+    
+
+ <h1>Denah dan Nomor-Nomor Ruangan SMA Negeri 6 Bekasi</h1>
+    <div class="denah-container">
+        <div class="ruang r06" onclick="openForm( 'Ruang 06', this )">R.06</div>
+        <div class="ruang r07" onclick="openForm( 'Ruang 07', this )">R.07</div>
+        <div class="ruang r08" onclick="openForm( 'Ruang 08', this )">R.08</div>
+        <div class="ruang r09" onclick="openForm( 'Ruang 09', this )">R.09</div>
+        <div class="ruang r10" onclick="openForm( 'Ruang 10', this )">R.10</div>
+
+        <div class="ruang r11" onclick="openForm( 'Ruang 11', this )">R.11</div>
+        <div class="ruang r12" onclick="openForm( 'Ruang 12', this )">R.12</div>
+
+        <div class="ruang r15" onclick="openForm( 'Ruang 15', this )">R.15</div>
+        <div class="ruang r16" onclick="openForm( 'Ruang 16', this )">R.16</div>
+        <div class="ruang r17" onclick="openForm( 'Ruang 17', this )">R.17</div>
+        <div class="ruang r18" onclick="openForm( 'Ruang 18', this )">R.18</div>
+        <div class="ruang r19" onclick="openForm( 'Ruang 19', this )">R.19</div>
+
+        <div class="ruangs r29" onclick="openForm( 'Ruang 29', this )">R.29</div>
+        <div class="ruangs r30" onclick="openForm( 'Ruang 30', this )">R.30</div>
+        <div class="ruangs r31" onclick="openForm( 'Ruang 31', this )">R.31</div>
+        <div class="ruangs r32" onclick="openForm( 'Ruang 32', this )">R.32</div>
+        <div class="ruangs r33" onclick="openForm( 'Ruang 33', this )">R.33</div>
+        <div class="ruangs r34" onclick="openForm( 'Ruang 34', this )">R.34</div>
+        <div class="ruangs r35" onclick="openForm( 'Ruang 35', this )">R.35</div>
+
+        <div class="ruang r36" onclick="openForm( 'Ruang 36', this )">R.36</div>
+        <div class="ruang r37" onclick="openForm( 'Ruang 37', this )">R.37</div>
+        <div class="ruang r38" onclick="openForm( 'Ruang 38', this )">R.38</div>
+
+        <div class="ruang r39" onclick="openForm( 'Ruang 39', this )">R.39</div>
+        <div class="ruang r40" onclick="openForm( 'Ruang 40', this )">R.40</div>
+        <div class="ruang r41" onclick="openForm( 'Ruang 41', this )">R.41</div>
+        <div class="ruang r42" onclick="openForm( 'Ruang 42', this )">R.42</div>
+
+        <div class="ruang r43" onclick="openForm( 'Ruang 43', this )">R.43</div>
+        <div class="ruang r22" onclick="openForm( 'Ruang 22', this )">R.22</div>
+        <div class="ruang r23" onclick="openForm( 'Ruang 23', this )">R.23</div>
+        <div class="ruang r24" onclick="openForm( 'Ruang 24', this )">R.24</div>
+
+        <div class="ruang r20" onclick="openForm( 'Ruang 20', this )">R.20</div>
+        <div class="ruang r21" onclick="openForm( 'Ruang 21', this )">R.21</div>
+        <div class="ruang r01" onclick="openForm( 'Ruang 01', this )">R.01</div>
+        <div class="ruang lobby" onclick="openForm( 'Ruang lobby', this )">lobby</div>
+        <div class="ruang r02" onclick="openForm( 'Ruang 02', this )">R.02</div>
+
+        <div class="ruang r03" onclick="openForm( 'Ruang 03', this )">R.03</div>
+        <div class="ruang r25" onclick="openForm( 'Ruang 25', this )">R.25</div>
+        <div class="ruang r26" onclick="openForm( 'Ruang 26', this )">R.26</div>
+        <div class="ruang r27" onclick="openForm( 'Ruang 27', this )">R.27</div>
+        <div class="ruang r28" onclick="openForm( 'Ruang 28', this )">R.28</div>
+        <div class="ruang r04" onclick="openForm( 'Ruang 04', this )">R.04</div>
+        <div class="ruang r05" onclick="openForm( 'Ruang 05', this )">R.05</div>
+
+        <div class="ruang masjid" onclick="openForm( 'masjid', this )">Masjid</div>
+         <div class="ruang upacara" onclick="openForm( 'Lapangan Olahraga/Upacara', this )">LAPANGAN OLAHRAGA / UPACARA</div>
+         <div class="ruang lapangan" onclick="openForm( 'Lapangan', this )">
+            <p class="teks">L<br>A<br>P<br>A<br>N<br>G<br>A<br>N</p>
+        </div>
+    </div>
+    
+    <div id="formPopup" class="form-popup">
+        <form class="form-container">
+            
+            <h2 id="formTitle"> Peminjaman </h2>
+            <button type="button" class="btn" onclick="submitForm()">Cek Peminjaman</button>
+            <label for="nama">Nama Peminjam:</label>
+            <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
+
+            <label for="ekskul">Nama Ekskul:</label>
+            <select id="ekskul" required>
+                <option value="Tomodachi">Tomodachi</option>
+                <option value="Six IT">Six IT</option>
+                <option value="Risamsi">Risamsi</option>
+                <option value="Garnisun">Garnisun</option>
+                <option value="Pasnamsi">Pasnamsi</option>
+                <option value="Taekwondo">Taekwondo</option>
+                <option value="COV">COV</option>
+                <option value="E-com">E-com</option>
+                <option value="Kistik">Kistik</option>
+                <option value="PB">PB</option>
+                <option value="HG-Zes">HG-Zes</option>
+                <option value="Enviro Army">Enviro Army</option>
+                <option value="Kopsina">Kopsina</option>
+                <option value="Rokhris">Rokhris</option>
+                <option value="LASER">LASER</option>
+            </select>
+
+            <label for="alasan">Alasan Meminjam:</label>
+            <input type="text" id="alasan" placeholder="Masukkan alasan" required>
+
+            <label for="jamMulai">Jam Mulai:</label>
+            <input type="time" id="jamMulai" required>
+
+            <label for="jamSelesai">Jam Selesai:</label>
+            <input type="time" id="jamSelesai" required>
+
+            <button type="button" class="btn" onclick="submitForm()">Pinjam Ruangan</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Batal</button>
+        </form>
+    </div>
+
+    <div id="daftarPinjaman" class="daftar-pinjaman"></div>
+
+    <button onclick="resetLocalStorage()">Reset Local Storage</button>
+
+ 
+   
+   
+    <script src="script.js"></script>
+</body>
+</html>
