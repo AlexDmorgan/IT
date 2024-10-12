@@ -1,0 +1,286 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.denah-container {
+    display: grid;
+    grid-template-columns: repeat(18, 120px); /* Sesuaikan dengan jumlah kolom sesuai denah */
+    grid-template-rows: repeat(12, 40px); /* Sesuaikan dengan jumlah baris */
+    gap: 8px;
+   
+    
+}
+
+.ruang {
+    background-color: #4c85ef;
+    padding: 10px;
+    text-align: center;
+    border: 4px solid #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.ruangs {
+    background-color: #ec993a;
+    padding: 10px;
+    text-align: center;
+    border: 4px solid #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r29 { grid-column: 5 / 6 ;grid-row: 1 / 2;}
+.r30 { grid-column: 6 / 7 ;grid-row: 1 / 2;}
+.r31 { grid-column: 7 / 8 ;grid-row: 1 / 2;}
+.r32 { grid-column: 8 / 9 ;grid-row: 1 / 2;}
+.r33 { grid-column: 9 / 10 ;grid-row: 1 / 2;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r06 { grid-column: 5 / 6 ;grid-row: 2 / 3;}
+.r07 { grid-column: 6 / 7 ;grid-row: 2 / 3;}
+.r08 { grid-column: 7 / 8 ;grid-row: 2 / 3;}
+.r09 { grid-column: 8 / 9 ;grid-row: 2 / 3;}
+.r10 { grid-column: 9 / 10 ;grid-row: 2 / 3;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r11 { grid-column: 9 / 10 ;grid-row: 3 / 4;}
+.r12 { grid-column: 8 / 9 ;grid-row: 3 / 4;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r34 { grid-column: 9 / 10 ;grid-row: 4 / 5;}
+.r35 { grid-column: 8 / 9 ;grid-row: 4 / 5;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r36 { grid-column: 8 / 10 ;grid-row: 6 / 7;}
+.r37 { grid-column: 7 / 8 ;grid-row: 6 / 7;}
+.r38 { grid-column: 6 / 7 ;grid-row: 6 / 7;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r15 { grid-column: 5 / 6 ;grid-row: 7 / 8;}
+.r16 { grid-column: 5 / 6 ;grid-row: 8 / 9;}
+.r17 { grid-column: 5 / 6 ;grid-row: 9 / 10;}
+.r18 { grid-column: 5 / 6 ;grid-row: 10 / 11;}
+.r19 { grid-column: 5 / 6 ;grid-row: 11 / 12;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r39 { grid-column: 6 / 7 ;grid-row: 8 / 9;}
+.r40 { grid-column: 6 / 7 ;grid-row: 9 / 10;}
+.r41 { grid-column: 6 / 7 ;grid-row: 10 / 11;}
+.r42 { grid-column: 6 / 7 ;grid-row: 11 / 12;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r43 { grid-column: 6 / 7 ;grid-row: 13 / 14;}
+.r22 { grid-column: 5 / 6 ;grid-row: 13 / 14;}
+.r23 { grid-column: 4 / 5 ;grid-row: 13 / 14;}
+.r24 { grid-column: 3 / 4 ;grid-row: 13 / 14;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r20 { grid-column: 6 / 7 ;grid-row: 14 / 15;}
+.r21 { grid-column: 5 / 6 ;grid-row: 14 / 15;}
+.r01 { grid-column: 4 / 5 ;grid-row: 14 / 15;}
+.r02 { grid-column: 2 / 3 ;grid-row: 14 / 15;}
+
+/* Posisi setiap ruangan sesuai dengan denah yang kamu berikan */
+.r03 { 
+    grid-column: 1 / 3 ;grid-row: 11 / 12;
+    height: 40px;
+}
+.r25 { grid-column: 1 / 2;grid-row: 10 / 11;}
+.r26 { grid-column: 2 / 3;grid-row: 10 / 11;}
+.r27 { grid-column: 2 / 3;grid-row: 9 / 10;}
+.r28 { grid-column: 2 / 3;grid-row: 8 / 9;}
+.r04 { grid-column: 3 / 4;grid-row: 9 / 10;
+width: 50px;}
+.r05 { grid-column: 3 / 4;grid-row: 8 / 9;
+width: 50px;}
+
+/* Lapangan upacara */
+.upacara {
+    grid-column: 4 / 8;
+    grid-row: 3 / 6;
+    background-color: #b4bea7f9;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #000000;
+   
+}
+
+/* Lapangan */
+.lapangan {
+grid-column: 4 / 5;
+grid-row: 6 / 12;
+background-color: #b4bea7f9;
+text-align: center;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 4px solid #000000;
+}
+
+/* Kantin */
+.kantin {
+    grid-column: 8 / 10;
+    grid-row: 3 / 4;
+    background-color: #f7d9d9;
+}
+
+/* Masjid */
+.masjid {
+    grid-column: 1 / 2;
+    grid-row: 14 / 22;
+    background-color: #d9f7d9;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    display: flex;
+    background-color: #4c85ef;
+    border: 4px solid #000000;
+}
+
+/* Lobby */
+.lobby {
+    grid-column: 3 / 4;
+    grid-row: 14 / 15;
+    background-color: #dff0d8;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #4c85ef;
+    border: 4px solid #000000;
+}
+
+.teks {
+    font-size: 20px;
+    text-align: center;
+    line-height: 1.5;
+    margin: 1;
+}
+
+
+
+.ruang:hover {
+    background-color: #96a3b981;
+}
+
+.ruangs:hover {
+    background-color: #96a3b981;
+}
+
+/* Form Popup */
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.form-AditGay {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container h2 {
+    text-align: center;
+}
+
+.form-container label {
+    margin-top: 10px;
+}
+
+.form-container input,
+.form-container select {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: Arial, sans-serif;  /* Jenis font */
+    font-weight: bold;   /* Ketebalan font (normal, bold, lighter, dll.) */
+    
+}
+.btnC {
+    background-color: #aeae98;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 10px;
+    margin-top: 15px;
+    border: 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: Arial, sans-serif;  /* Jenis font */
+    font-weight: bold;   /* Ketebalan font (normal, bold, lighter, dll.) */
+    
+}
+.btn.cancel {
+    background-color: #f44336;
+    font-family: Arial, sans-serif;  /* Jenis font */
+    font-weight: bold;   /* Ketebalan font (normal, bold, lighter, dll.) */
+}
+
+
+
+.daftar-pinjaman {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.cancel {
+    background-color: #f44336;
+}
+
+.cancel:hover {
+    background-color: #e53935;
+}
