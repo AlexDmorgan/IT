@@ -1,0 +1,7 @@
+function openForm(roomName, element) {
+    if (element.style.backgroundColor !== "red") {
+        selectedRoom = element;
+        document.getElementById("formTitle").textContent = `Peminjaman (${roomName})`; // Mengupdate judul form
+        document.getElementById("formPopup").style.display = "block";
+    }
+}
