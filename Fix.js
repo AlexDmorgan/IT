@@ -1,7 +1,6 @@
 let selectedRoom = null;
 let selectedDate = new Date().toISOString().split('T')[0]; // Set tanggal saat ini (format YYYY-MM-DD)
 
-// Logo ekskul harus didefinisikan di atas fungsi yang menggunakannya
 const ekskulLogos = {
     'Six-IT': 'logo/sixit.png',
     'Tomodachi': 'logo/tomodachi.png',
@@ -22,9 +21,10 @@ const ekskulLogos = {
     'Rokhris': 'logo/rokhris.png',
     'Science Club': 'logo/SC.png',
     'Taekwondo': 'logo/taekwondo.png',
+    'MPK': 'logo/mpk.png',
+    'Osis': 'logo/osis.PNG',
 };
 
-// Array untuk menyimpan jadwal peminjaman
 let bookings = [];
 
 // Fungsi untuk menyimpan status ruangan dan logo ekskul ke localStorage berdasarkan tanggal
@@ -62,7 +62,7 @@ function updateRoomStatus() {
                 room.setAttribute('data-jamMulai', status[`ruang_${index}`].jamMulai); // Simpan jam mulai
                 room.setAttribute('data-jamSelesai', status[`ruang_${index}`].jamSelesai); // Simpan jam selesai
             }
-            room.onclick = null; // Nonaktifkan klik untuk ruangan yang tidak tersedia
+            room.onclick = () => openForm(`Ruang ${index + 1}`, room); // Aktifkan klik untuk ruangan yang tidak tersedia
         } else {
             room.style.backgroundColor = "";
             room.onclick = () => openForm(`Ruang ${index + 1}`, room); // Aktifkan klik untuk ruangan yang tersedia
@@ -71,15 +71,12 @@ function updateRoomStatus() {
 }
 
 // Fungsi untuk mengecek apakah ada konflik waktu
-// Fungsi untuk mengecek apakah ada konflik waktu
 function checkConflict(startTime, endTime, roomElement) {
     const roomIndex = Array.from(document.querySelectorAll('.ruang')).indexOf(roomElement);
     const status = JSON.parse(localStorage.getItem(`status_${selectedDate}`)) || {};
 
-    // Loop melalui semua status yang ada
     for (let booking of Object.values(status)) {
         if (booking.ruang === `ruang_${roomIndex}`) {
-            // Cek apakah ada waktu yang tumpang tindih
             if (!(endTime <= booking.jamMulai || startTime >= booking.jamSelesai)) {
                 return true; // Ada konflik
             }
@@ -106,18 +103,15 @@ document.getElementById('bookingForm').addEventListener('submit', function (even
     const startTime = document.getElementById('jamMulai').value;
     const endTime = document.getElementById('jamSelesai').value;
 
-    // Validasi apakah waktu yang dipilih sah
     if (startTime >= endTime) {
         alert('Waktu mulai harus lebih awal daripada waktu selesai!');
         return;
     }
 
-    // Cek apakah ada konflik dengan jadwal yang sudah ada
     if (checkConflict(startTime, endTime, selectedRoom)) {
         alert('Waktu ini sudah terpakai, silakan pilih waktu lain.');
     } else {
-        addBooking(startTime, endTime, selectedRoom); // Tambahkan peminjaman
-        alert('Peminjaman berhasil diajukan!');
+        submitForm(); // Panggil fungsi submitForm untuk mengirim data
     }
 });
 
@@ -129,14 +123,30 @@ function addBooking(startTime, endTime, roomElement) {
 
 // Fungsi untuk membuka form
 function openForm(roomName, element) {
-    if (element.style.backgroundColor !== "red") {
-        selectedRoom = element;
-        document.getElementById("formTitle").textContent = `Peminjaman (${roomName})`; // Mengupdate judul form
-        document.getElementById("formPopup").style.display = "block";
-    }
-}
+    selectedRoom = element;
 
-// auah
+    // Cek apakah ruangan sudah dipinjam
+    const ekskul = selectedRoom.getAttribute('data-ekskul');
+    const jamMulai = selectedRoom.getAttribute('data-jamMulai');
+    const jamSelesai = selectedRoom.getAttribute('data-jamSelesai');
+
+    document.getElementById("formTitle").textContent = `Peminjaman (${roomName})`; // Mengupdate judul form
+
+    if (ekskul) {
+        // Jika sudah dipinjam, tampilkan informasi peminjam
+        document.getElementById("nama").value = 'Peminjam: ' + ekskul; // Menampilkan nama ekskul
+        document.getElementById("jamMulai").value = jamMulai; // Menampilkan jam mulai
+        document.getElementById("jamSelesai").value = jamSelesai; // Menampilkan jam selesai
+        document.getElementById("alasan").value = 'Ruangan sudah dipinjam'; // Menambahkan informasi
+        document.getElementById("ekskul").value = ekskul; // Menyimpan nama ekskul
+    } else {
+        // Kosongkan field jika belum dipinjam
+        clearForm();
+    }
+
+    document.getElementById("formPopup").style.display = "block"; // Menampilkan form
+}
+ 
 
 
 // Fungsi untuk menutup form
@@ -168,7 +178,6 @@ function submitForm() {
     const jamMulai = document.getElementById("jamMulai").value;
     const jamSelesai = document.getElementById("jamSelesai").value;
 
-    // Cek jika semua data telah diisi
     if (nama && ekskul && alasan && jamMulai && jamSelesai) {
         console.log('Semua data sudah diisi, melanjutkan proses...');
 
@@ -189,38 +198,35 @@ function submitForm() {
         .then(response => response.text())
         .then(data => {
             console.log('Data berhasil dikirim:', data);
-            
-            // Tampilkan daftar peminjaman
-            const daftarPinjaman = document.getElementById("daftarPinjaman");
-            const newListItem = document.createElement('li');
-            newListItem.textContent = `${ekskul} meminjam ${selectedRoom.innerText} dari ${jamMulai} hingga ${jamSelesai}`;
-            daftarPinjaman.appendChild(newListItem);
 
-            // Tampilkan logo ekskul di ruangan yang dipinjam
-            if (ekskulLogos[ekskul]) {
-                const imagePath = ekskulLogos[ekskul];
-                selectedRoom.innerHTML = `<img src="${imagePath}" alt="${ekskul}" style="width: 30px; height: auto;">`;
-                selectedRoom.setAttribute('data-ekskul', ekskul);
-                selectedRoom.setAttribute('data-jamMulai', jamMulai);
-                selectedRoom.setAttribute('data-jamSelesai', jamSelesai);
-            }
+            // Tampilkan logo ekskul di ruangan yang dipilih
+            const imagePath = ekskulLogos[ekskul];
+            selectedRoom.innerHTML = `<img src="${imagePath}" alt="${ekskul}" style="width: 30px; height: auto;">`;
 
-            // Tandai ruangan sebagai terpakai
+            // Tandai ruangan sebagai dipesan
             selectedRoom.style.backgroundColor = "red";
-            saveRoomStatus(); // Simpan status ke localStorage
-            closeForm(); // Tutup form setelah pengiriman
+            selectedRoom.setAttribute('data-ekskul', ekskul); // Simpan nama ekskul di atribut data
+            selectedRoom.setAttribute('data-jamMulai', jamMulai); // Simpan jam mulai di atribut data
+            selectedRoom.setAttribute('data-jamSelesai', jamSelesai); // Simpan jam selesai di atribut data
+
+            // Simpan status ruangan ke localStorage
+            saveRoomStatus();
+            closeForm(); // Tutup form setelah berhasil kirim data
         })
         .catch(error => {
-            console.error('Terjadi kesalahan saat mengirim data:', error);
+            console.error('Terjadi kesalahan:', error);
         });
     } else {
-        alert('Semua data harus diisi!');
+        console.log('Ada data yang belum diisi, silakan lengkapi semua data.');
     }
 }
 
+// Memanggil fungsi untuk memperbarui tampilan ruangan ketika halaman dimuat
+document.addEventListener('DOMContentLoaded', function () {
+    updateRoomStatus(); // Memperbarui status ruangan saat halaman dimuat
+});
 
-// Panggil fungsi untuk memperbarui status ruangan saat halaman dimuat
-window.onload = updateRoomStatus;
+
 
 function resetLocalStorage() {
     localStorage.clear(); // Hapus semua data di localStorage
