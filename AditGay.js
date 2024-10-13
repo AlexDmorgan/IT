@@ -42,3 +42,15 @@
                 closePopup(); // Tutup popup setelah berhasil
             }
         });
+
+
+
+
+
+ if (checkConflict(startTime, endTime)) {
+                // Jika ada konflik, tampilkan alert ini
+                alert('Waktu ini sudah terpakai, silakan pilih waktu atau ruangan lain.');
+            } else {
+                addBooking(startTime, endTime); // Tambah booking jika tidak ada konflik
+                alert('Peminjaman berhasil diajukan!');
+                closePopup(); // Tutup popup setelah berhasil
