@@ -21,11 +21,11 @@ const ekskulLogos = {
     'Rokhris': 'logo/rokhris.png',
     'Science Club': 'logo/SC.png',
     'Taekwondo': 'logo/taekwondo.png',
-    'MPK': 'logo/mpk.png',
-    'Osis': 'logo/osis.PNG',
+
 };
 
-let bookings = [];
+
+
 
 // Fungsi untuk menyimpan status ruangan dan logo ekskul ke localStorage berdasarkan tanggal
 function saveRoomStatus() {
@@ -45,6 +45,31 @@ function saveRoomStatus() {
 
     localStorage.setItem(`status_${selectedDate}`, JSON.stringify(status));
 }
+
+// Konflik waktu
+document.getElementById('bookingForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Mencegah reload halaman
+
+    const jamMulai = document.getElementById('jamMulai').value;
+    const jamSelesai = document.getElementById('jamSelesai').value;
+
+    // Validasi apakah waktu mulai dan selesai sah
+    if (jamMulai >= jamSelesai) {
+        alert('Waktu mulai harus lebih awal daripada waktu selesai!');
+        return;
+    }
+
+    // Cek apakah ada konflik dengan jadwal yang sudah ada
+    if (checkConflict(selectedRoom, jamMulai, jamSelesai)) {
+        // Jika ada konflik, tampilkan alert ini
+        alert('Waktu ini sudah terpakai, silakan pilih waktu atau ruangan lain.');
+    } else {
+        addBooking(jamMulai, jamSelesai, selectedRoom); // Lanjutkan jika tidak ada konflik
+        alert('Peminjaman berhasil diajukan!');
+        closePopup(); // Tutup popup setelah berhasil
+    }
+});
+
 
 // Fungsi untuk memperbarui tampilan ruangan berdasarkan status yang tersimpan di localStorage
 function updateRoomStatus() {
@@ -71,19 +96,52 @@ function updateRoomStatus() {
 }
 
 // Fungsi untuk mengecek apakah ada konflik waktu
-function checkConflict(startTime, endTime, roomElement) {
-    const roomIndex = Array.from(document.querySelectorAll('.ruang')).indexOf(roomElement);
+function checkConflict(roomElement, jamMulai, jamSelesai) {
     const status = JSON.parse(localStorage.getItem(`status_${selectedDate}`)) || {};
+    const roomIndex = Array.from(document.querySelectorAll('.ruang, .ruangs')).indexOf(roomElement);
 
-    for (let booking of Object.values(status)) {
-        if (booking.ruang === `ruang_${roomIndex}`) {
-            if (!(endTime <= booking.jamMulai || startTime >= booking.jamSelesai)) {
-                return true; // Ada konflik
-            }
+    for (let key in status) {
+        if (key === `ruang_${roomIndex}`) continue; // Lewati ruangan yang sedang diperiksa
+
+        const booking = status[key];
+        if (!(jamSelesai <= booking.jamMulai || jamMulai >= booking.jamSelesai)) {
+            return true; // Ada konflik waktu
         }
     }
     return false;
 }
+
+// Fungsi untuk menambah pemesanan baru
+function addBooking(jamMulai, jamSelesai) {
+    const booking = { jamMulai, jamSelesai };
+    bookings.push(booking); // Tambah pemesanan baru
+    localStorage.setItem('bookings', JSON.stringify(bookings)); // Simpan ke localStorage
+    updateScheduleList(); // Update daftar jadwal di halaman
+}
+
+// Menangani form submit
+document.getElementById('bookingForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Mencegah reload halaman
+
+    const jamMulai = document.getElementById('jamMulai').value;
+    const jamSelesai = document.getElementById('jamSelesai').value;
+
+    // Validasi apakah waktu mulai dan selesai sah
+    if (jamMulai >= jamSelesai) {
+        alert('Waktu mulai harus lebih awal daripada waktu selesai!');
+        return;
+    }
+
+    // Cek konflik waktu
+    if (checkConflict(jamMulai, jamSelesai)) {
+        // Jika ada konflik, tampilkan alert ini
+        alert('Waktu ini sudah terpakai, silakan pilih waktu atau ruangan lain.');
+    } else {
+        addBooking(jamMulai, jamSelesai); // Tambah booking jika tidak ada konflik
+        alert('Peminjaman berhasil diajukan!');
+        closePopup(); // Tutup popup setelah berhasil
+    }
+});
 
 // Update jadwal yang ada di halaman
 function updateScheduleList() {
@@ -91,7 +149,7 @@ function updateScheduleList() {
     scheduleList.innerHTML = ''; // Kosongkan daftar
     bookings.forEach(booking => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Dari ${booking.startTime} sampai ${booking.endTime} di ${booking.roomElement.innerText}`;
+        listItem.textContent = `Dari ${booking.jamMulai} sampai ${booking.jamSelesai} di ${booking.roomElement.innerText}`;
         scheduleList.appendChild(listItem);
     });
 }
@@ -100,15 +158,15 @@ function updateScheduleList() {
 document.getElementById('bookingForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Mencegah reload halaman
 
-    const startTime = document.getElementById('jamMulai').value;
-    const endTime = document.getElementById('jamSelesai').value;
+    const jamMulai = document.getElementById('jamMulai').value;
+    const jamSelesai = document.getElementById('jamSelesai').value;
 
-    if (startTime >= endTime) {
+    if (jamMulai >= jamSelesai) {
         alert('Waktu mulai harus lebih awal daripada waktu selesai!');
         return;
     }
 
-    if (checkConflict(startTime, endTime, selectedRoom)) {
+    if (checkConflict(jamMulai, jamSelesai, selectedRoom)) {
         alert('Waktu ini sudah terpakai, silakan pilih waktu lain.');
     } else {
         submitForm(); // Panggil fungsi submitForm untuk mengirim data
@@ -116,8 +174,8 @@ document.getElementById('bookingForm').addEventListener('submit', function (even
 });
 
 // Fungsi untuk menambahkan jadwal baru
-function addBooking(startTime, endTime, roomElement) {
-    bookings.push({ startTime, endTime, roomElement });
+function addBooking(jamMulai, jamSelesai, roomElement) {
+    bookings.push({ jamMulai, jamSelesai, roomElement });
     updateScheduleList();
 }
 
@@ -146,8 +204,6 @@ function openForm(roomName, element) {
 
     document.getElementById("formPopup").style.display = "block"; // Menampilkan form
 }
- 
-
 
 // Fungsi untuk menutup form
 function closeForm() {
@@ -198,28 +254,37 @@ function submitForm() {
         .then(response => response.text())
         .then(data => {
             console.log('Data berhasil dikirim:', data);
+            
+           // daftar pinjaman
 
-            // Tampilkan logo ekskul di ruangan yang dipilih
-            const imagePath = ekskulLogos[ekskul];
-            selectedRoom.innerHTML = `<img src="${imagePath}" alt="${ekskul}" style="width: 30px; height: auto;">`;
+            // Tampilkan logo ekskul di ruangan yang dipinjam
+            if (ekskulLogos[ekskul]) {
+                const imagePath = ekskulLogos[ekskul];
+                selectedRoom.innerHTML = `<img src="${imagePath}" alt="${ekskul}" style="width: 30px; height: auto;">`;
+                selectedRoom.setAttribute('data-ekskul', ekskul);
+                selectedRoom.setAttribute('data-jamMulai', jamMulai);
+                selectedRoom.setAttribute('data-jamSelesai', jamSelesai);
+            }
+            selectedRoom.style.backgroundColor = "red"; // Ubah warna menjadi merah
 
-            // Tandai ruangan sebagai dipesan
-            selectedRoom.style.backgroundColor = "red";
-            selectedRoom.setAttribute('data-ekskul', ekskul); // Simpan nama ekskul di atribut data
-            selectedRoom.setAttribute('data-jamMulai', jamMulai); // Simpan jam mulai di atribut data
-            selectedRoom.setAttribute('data-jamSelesai', jamSelesai); // Simpan jam selesai di atribut data
-
-            // Simpan status ruangan ke localStorage
+            // Simpan status ruangan
             saveRoomStatus();
-            closeForm(); // Tutup form setelah berhasil kirim data
+            
+            // Update status ruangan setelah peminjaman
+            updateRoomStatus(); // Pastikan tampilan ruangan diperbarui
+            
+            // Tutup form setelah pengiriman
+            closeForm(); 
         })
         .catch(error => {
-            console.error('Terjadi kesalahan:', error);
+            console.error('Terjadi kesalahan saat mengirim data:', error);
         });
     } else {
-        console.log('Ada data yang belum diisi, silakan lengkapi semua data.');
+        alert('Mohon lengkapi semua field!');
     }
 }
+
+
 
 // Memanggil fungsi untuk memperbarui tampilan ruangan ketika halaman dimuat
 document.addEventListener('DOMContentLoaded', function () {
